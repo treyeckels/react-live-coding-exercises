@@ -6,7 +6,8 @@ class AddressBook extends React.Component {
   state = {
     contacts: [],
     originalContacts: [],
-    currentFilter: "all"
+    currentFilter: "all",
+    currentTheme: "light"
   };
 
   styles = {
@@ -15,6 +16,13 @@ class AddressBook extends React.Component {
     },
     filterContainer: {
       margin: "20px 0"
+    },
+    light: {
+
+    },
+    dark: {
+      backgroundColor: 'rgba(0,0,0,1)',
+      color: 'rgba(256, 256, 256, 1)'
     }
   };
 
@@ -36,6 +44,12 @@ class AddressBook extends React.Component {
     });
   };
 
+  changeTheme = currentTheme => {
+    this.setState({
+      currentTheme
+    });
+  };
+
   async componentDidMount() {
     const contactsFeed = await fetch("https://randomuser.me/api/?results=10");
     const contactsObject = await contactsFeed.json();
@@ -52,8 +66,20 @@ class AddressBook extends React.Component {
     }
 
     return (
-      <div>
+      <div style={this.styles[this.state.currentTheme]}>
         <h1>Address Book</h1>
+        <Filter
+          label="Dark"
+          value="dark"
+          updateList={this.changeTheme}
+          selected={this.state.currentTheme === "dark"}
+        />
+        <Filter
+          label="Light"
+          value="light"
+          updateList={this.changeTheme}
+          selected={this.state.currentTheme === "light"}
+        />
         <h2>Hello {this.props.owner}!</h2>
         <div style={this.styles.filterContainer}>
           <Filter
